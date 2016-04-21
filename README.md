@@ -6,7 +6,7 @@
   - [$HTML， HTTP，web综合问题](#$html，-http，web综合问题)
     - [常见排序算法的时间复杂度,空间复杂度](#常见排序算法的时间复杂度空间复杂度)
     - [前端需要注意哪些SEO](#前端需要注意哪些seo)
-    >- [web开发中会话跟踪的方法有哪些](#web开发中会话跟踪的方法有哪些)
+    - [**web开发中会话跟踪的方法有哪些**](#web开发中会话跟踪的方法有哪些)
     - [`<img>`的`title`和`alt`有什么区别](#img的title和alt有什么区别)
     - [doctype是什么,举例常见doctype及特点](#doctype是什么举例常见doctype及特点)
     - [HTML全局属性(global attribute)有哪些](#html全局属性global-attribute有哪些)
