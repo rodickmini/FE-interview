@@ -411,7 +411,7 @@ Content-Type: text/html; charset=iso-8859-1
 
 ### CSS选择器有哪些
 
-1. ***通用选择器**：选择所有元素，**不参与计算优先级**，兼容性IE6+
+1. **通用选择器**：选择所有元素，**不参与计算优先级**，兼容性IE6+
 2. **#X id选择器**：选择id值为X的元素，兼容性：IE6+
 3. **.X 类选择器**： 选择class包含X的元素，兼容性：IE6+
 4. **X Y后代选择器**： 选择满足X选择器的后代节点中满足Y选择器的元素，兼容性：IE6+
@@ -1087,6 +1087,51 @@ z轴上的默认层叠顺序如下（从下到上）：
 7. cookie有secure属性要求HTTPS传输
 8. 浏览器不能保存超过300个cookie，单个服务器不能超过20个，每个cookie不能超过4k。web storage大小支持能达到5M
 
+### 客户端存储localStorage和sessionStorage
+
+- localStorage有效期为永久，sessionStorage有效期为顶层窗口关闭前
+- 同源文档可以读取并修改localStorage数据，sessionStorage只允许同一个窗口下的文档访问，如通过iframe引入的同源文档。
+- Storage对象通常被当做普通javascript对象使用：**通过设置属性来存取字符串值**，也可以通过**setItem(key, value)设置**，**getItem(key)读取**，**removeItem(key)删除**，**clear()删除所有数据**，**length表示已存储的数据项数目**，**key(index)返回对应索引的key**
+
+```
+localStorage.setItem('x', 1); // storge x->1
+localStorage.getItem('x); // return value of x
+
+// 枚举所有存储的键值对
+for (var i = 0, len = localStorage.length; i < len; ++i ) {
+    var name = localStorage.key(i);
+    var value = localStorage.getItem(name);
+}
+
+localStorage.removeItem('x'); // remove x
+localStorage.clear();  // remove all data
+```
+
+### cookie及其操作
+
+- cookie是web浏览器存储的少量数据，最早设计为服务器端使用，作为HTTP协议的扩展实现。cookie数据会自动在浏览器和服务器之间传输。
+- 通过读写cookie检测是否支持
+- cookie属性有**名**，**值**，**max-age**，**path**, **domain**，**secure**；
+- cookie默认有效期为浏览器会话，一旦用户关闭浏览器，数据就丢失，通过设置**max-age=seconds**属性告诉浏览器cookie有效期
+- cookie作用域通过**文档源**和**文档路径**来确定，通过**path**和**domain**进行配置，web页面同目录或子目录文档都可访问
+- 通过cookie保存数据的方法为：为document.cookie设置一个符合目标的字符串如下
+- 读取document.cookie获得'; '分隔的字符串，key=value,解析得到结果
+
+```
+document.cookie = 'name=qiu; max-age=9999; path=/; domain=domain; secure';
+
+document.cookie = 'name=aaa; path=/; domain=domain; secure'; 
+// 要改变cookie的值，需要使用相同的名字、路径和域，新的值
+// 来设置cookie，同样的方法可以用来改变有效期
+
+// 设置max-age为0可以删除指定cookie
+
+//读取cookie，访问document.cookie返回键值对组成的字符串，
+//不同键值对之间用'; '分隔。通过解析获得需要的值
+```
+
+[cookieUtil.js](https://github.com/qiu-deqing/google/blob/master/module/js/cookieUtil.js)：自己写的cookie操作工具
+
 ### javascript跨域通信
 同源：两个文档同源需满足
 
@@ -1158,50 +1203,7 @@ NETWORK:
 cgi/
 ```
 
-### 客户端存储localStorage和sessionStorage
 
-- localStorage有效期为永久，sessionStorage有效期为顶层窗口关闭前
-- 同源文档可以读取并修改localStorage数据，sessionStorage只允许同一个窗口下的文档访问，如通过iframe引入的同源文档。
-- Storage对象通常被当做普通javascript对象使用：**通过设置属性来存取字符串值**，也可以通过**setItem(key, value)设置**，**getItem(key)读取**，**removeItem(key)删除**，**clear()删除所有数据**，**length表示已存储的数据项数目**，**key(index)返回对应索引的key**
-
-```
-localStorage.setItem('x', 1); // storge x->1
-localStorage.getItem('x); // return value of x
-
-// 枚举所有存储的键值对
-for (var i = 0, len = localStorage.length; i < len; ++i ) {
-    var name = localStorage.key(i);
-    var value = localStorage.getItem(name);
-}
-
-localStorage.removeItem('x'); // remove x
-localStorage.clear();  // remove all data
-```
-
-### cookie及其操作
-
-- cookie是web浏览器存储的少量数据，最早设计为服务器端使用，作为HTTP协议的扩展实现。cookie数据会自动在浏览器和服务器之间传输。
-- 通过读写cookie检测是否支持
-- cookie属性有**名**，**值**，**max-age**，**path**, **domain**，**secure**；
-- cookie默认有效期为浏览器会话，一旦用户关闭浏览器，数据就丢失，通过设置**max-age=seconds**属性告诉浏览器cookie有效期
-- cookie作用域通过**文档源**和**文档路径**来确定，通过**path**和**domain**进行配置，web页面同目录或子目录文档都可访问
-- 通过cookie保存数据的方法为：为document.cookie设置一个符合目标的字符串如下
-- 读取document.cookie获得'; '分隔的字符串，key=value,解析得到结果
-
-```
-document.cookie = 'name=qiu; max-age=9999; path=/; domain=domain; secure';
-
-document.cookie = 'name=aaa; path=/; domain=domain; secure'; 
-// 要改变cookie的值，需要使用相同的名字、路径和域，新的值
-// 来设置cookie，同样的方法可以用来改变有效期
-
-// 设置max-age为0可以删除指定cookie
-
-//读取cookie，访问document.cookie返回键值对组成的字符串，
-//不同键值对之间用'; '分隔。通过解析获得需要的值
-```
-
-[cookieUtil.js](https://github.com/qiu-deqing/google/blob/master/module/js/cookieUtil.js)：自己写的cookie操作工具
 
 ### javascript有哪些方法定义对象
 
